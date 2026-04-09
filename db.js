@@ -1,13 +1,11 @@
 const mysql = require("mysql2");
 
-const db = mysql.createConnection(process.env.MYSQL_PUBLIC_URL);
+const db = mysql.createConnection(process.env.mysql://root:MsnVJkQTIBVTqZbOAoGHImiNVFKULsWw@nozomi.proxy.rlwy.net:46680/railway);
 
-db.connect(err => {
+db.connect((err) => {
   if (err) {
     console.log("DB connection failed ❌", err);
   } else {
     console.log("DB connected ✅");
   }
 });
-
-module.exports = db;
