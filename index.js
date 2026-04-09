@@ -7,26 +7,43 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+/* ROOT ROUTE */
+app.get("/", (req, res) => {
+  res.send("School API is running 🚀");
+});
+
 /* ADD SCHOOL API */
 app.post("/addSchool", (req, res) => {
   const { name, address, latitude, longitude } = req.body;
 
-  if (!name || !address || !latitude || !longitude) {
-    return res.status(400).json({ message: "All fields required" });
+  // Validation
+  if (!name || !address || latitude === undefined || longitude === undefined) {
+    return res.status(400).json({ message: "All fields are required" });
   }
 
-  const sql = "INSERT INTO schools (name, address, latitude, longitude) VALUES (?, ?, ?, ?)";
+  if (isNaN(latitude) || isNaN(longitude)) {
+    return res.status(400).json({ message: "Latitude and Longitude must be numbers" });
+  }
+
+  const sql = `
+    INSERT INTO schools (name, address, latitude, longitude)
+    VALUES (?, ?, ?, ?)
+  `;
 
   db.query(sql, [name, address, latitude, longitude], (err, result) => {
-    if (err) return res.status(500).json(err);
+    if (err) {
+      console.error("DB Insert Error:", err);
+      return res.status(500).json({ message: "Database error" });
+    }
 
     res.json({ message: "School added successfully" });
   });
 });
 
-/* DISTANCE FUNCTION */
+/* DISTANCE FUNCTION (Haversine Formula) */
 function getDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371;
+  const R = 6371; // Radius of Earth in KM
+
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
 
@@ -39,20 +56,31 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
   return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
 }
-// LIST SCHOOLS FIX
+
+/* LIST SCHOOLS API */
 app.get("/listSchools", (req, res) => {
   const latitude = parseFloat(req.query.latitude);
   const longitude = parseFloat(req.query.longitude);
 
-  if (!latitude || !longitude) {
-    return res.status(400).json({ message: "Location required" });
+  // Validation
+  if (isNaN(latitude) || isNaN(longitude)) {
+    return res.status(400).json({ message: "Valid latitude and longitude are required" });
   }
 
   db.query("SELECT * FROM schools", (err, results) => {
-    if (err) return res.status(500).json(err);
+    if (err) {
+      console.error("DB Fetch Error:", err);
+      return res.status(500).json({ message: "Database error" });
+    }
 
-    const sorted = results.map(school => {
-      const distance = getDistance(latitude, longitude, school.latitude, school.longitude);
+    const sorted = results.map((school) => {
+      const distance = getDistance(
+        latitude,
+        longitude,
+        school.latitude,
+        school.longitude
+      );
+
       return { ...school, distance };
     });
 
@@ -62,7 +90,7 @@ app.get("/listSchools", (req, res) => {
   });
 });
 
-// SERVER FIX
+/* SERVER */
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
