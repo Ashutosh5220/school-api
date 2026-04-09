@@ -39,10 +39,10 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
   return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
 }
-
-/* LIST SCHOOLS API */
+// LIST SCHOOLS FIX
 app.get("/listSchools", (req, res) => {
-  const { latitude, longitude } = req.query;
+  const latitude = parseFloat(req.query.latitude);
+  const longitude = parseFloat(req.query.longitude);
 
   if (!latitude || !longitude) {
     return res.status(400).json({ message: "Location required" });
@@ -62,7 +62,9 @@ app.get("/listSchools", (req, res) => {
   });
 });
 
-/* START SERVER */
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+// SERVER FIX
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
