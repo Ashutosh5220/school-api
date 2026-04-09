@@ -1,12 +1,12 @@
 const mysql = require("mysql2");
 
-const db = mysql.createConnection(process.env.MYSQL_URL);
+const db = mysql.createConnection(process.env.MYSQL_PUBLIC_URL);
 
-db.connect((err) => {
+db.connect(err => {
   if (err) {
     console.log("DB connection failed ❌", err);
   } else {
-    console.log("Connected to DB ✅");
+    console.log("DB connected ✅");
   }
 });
 
