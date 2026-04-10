@@ -1,0 +1,84 @@
+{
+  "info": {
+    "_postman_id": "a34000bf-b922-4250-9d1d-51dd7cd4d7e2",
+    "name": "School API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49598425",
+    "_collection_link": "https://go.postman.co/collection/49598425-a34000bf-b922-4250-9d1d-51dd7cd4d7e2?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Add School",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"POR School\",\r\n  \"address\": \"Pune\",\r\n  \"latitude\": 30,\r\n  \"longitude\": 60\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5000/addSchool",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "addSchool"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Schools)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/listSchools?latitude=19.1&longitude=72.9",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "listSchools"
+          ],
+          "query": [
+            {
+              "key": "latitude",
+              "value": "19.1"
+            },
+            {
+              "key": "longitude",
+              "value": "72.9"
+            },
+            {
+              "key": "lat",
+              "value": "19.1",
+              "disabled": true
+            },
+            {
+              "key": "lng",
+              "value": "72.9",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
